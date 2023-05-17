@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "p67_awstools"
+version = "0.1.2"
+description = "Various AWS code"
+authors = ["Rene Benner <rene@fortytwo.nl>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+boto3 = "^1.26.134"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.poetry.scripts] 
+aws_passwd_rotate = 'p67_awstools.password_rotate:main'
+cli_scale_ec2_asg = 'p67_awstools.cli_scale_ec2_asg:main'
