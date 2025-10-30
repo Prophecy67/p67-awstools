@@ -18,3 +18,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.scripts] 
 aws_passwd_rotate = 'p67_awstools.password_rotate:main'
 cli_scale_ec2_asg = 'p67_awstools.cli_scale_ec2_asg:main'
+sg_auditor = 'p67_awstools.sg_auditor:main'
+iam_analyzer = 'p67_awstools.iam_analyzer:main'
+backup_manager = 'p67_awstools.backup_manager:main'
+cross_account_finder = 'p67_awstools.cross_account_finder:main'
