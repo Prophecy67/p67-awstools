@@ -1,56 +1,148 @@
 # P67-awstools
 
-Helper tools for common AWS activities. Currently still in heavy development. For now, it provides two functionalities:
+A collection of helpful Python tools for common AWS activities. This project is currently in active development and provides two main functionalities to simplify AWS management tasks.
 
-## 1. Autoscaling Group Management (`cli_scale_ec2_asg`)
+## Table of Contents
 
-This Python script provides functionalities to manage autoscaling groups in AWS. It utilizes the Boto3 library to interact with the AWS Autoscaling and EC2 services.
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Tools](#tools)
+  - [1. Autoscaling Group Management](#1-autoscaling-group-management-cli_scale_ec2_asg)
+  - [2. IAM User Password and Access Key Management](#2-iam-user-password-and-access-key-management-aws_passwd_rotate)
+- [License](#license)
 
-### Prerequisites
+## Prerequisites
 
-- Python 3.x
+- Python 3.9 or higher
+- AWS CLI configured with appropriate credentials
 - Boto3 library
 
-### `cli_scale_ec2_asg` usage
+## Installation
 
-1. Run the script and select an action:
-   - Enter `1` to show instance uptimes for all autoscaling groups.
-   - Enter `2` to scale an autoscaling group to a desired size.
+Install the package using pip:
 
-2. If you choose to show instance uptimes, the script will display the running duration of each instance in each autoscaling group.
+```bash
+pip install p67-awstools
+```
 
-3. If you choose to scale an autoscaling group, you will be prompted to enter the numbers of the autoscaling groups you want to scale, separated by commas. Then, enter the desired size for the autoscaling group.
+Or install from source:
 
-4. The script will update the specified autoscaling groups with the desired size, and display a confirmation message.
+```bash
+git clone https://github.com/Prophecy67/p67-awstools.git
+cd p67-awstools
+pip install .
+```
 
-**Note:**
+## Tools
 
-- Ensure that the AWS credentials used by the script have appropriate permissions to describe and update autoscaling groups.
-- The script currently supports a maximum of 100 autoscaling groups due to the default value used in the `describe_auto_scaling_groups` function. Modify the `MaxRecords` parameter in the `get_autoscaling_groups` function if you have more than 100 autoscaling groups.
+### 1. Autoscaling Group Management (`cli_scale_ec2_asg`)
 
-## 2. IAM User Password and Access Key Management (`aws_passwd_rotate`)
+The [`cli_scale_ec2_asg`](P67_awstools/cli_scale_ec2_asg.py) tool provides functionality to manage AWS Auto Scaling Groups. It allows you to view instance uptimes and scale groups to desired sizes.
 
-This Python script provides a way to change the password of an IAM user in AWS and manage their access keys. It utilizes the Boto3 library to interact with the AWS IAM service.
+#### Usage
 
-### `aws_passwd_rotate` Usage
+Run the tool from the command line:
 
-1. Run the script and enter the following information:
-   - Enter your current password: Enter the current password of the IAM user.
-   - Enter your new password: Enter the desired new password for the IAM user.
+```bash
+cli_scale_ec2_asg
+```
 
-2. The script will change the IAM user's password to the new password provided.
+#### Features
 
-3. All existing access keys for the IAM user will be disabled.
+1. **Show Instance Uptimes** (Option 1)
+   - Displays the running duration of each instance in all Auto Scaling Groups
+   - Helps identify long-running instances that may need attention
 
-4. A new access key will be created for the IAM user.
+2. **Scale Auto Scaling Groups** (Option 2)
+   - Select one or more Auto Scaling Groups to scale (enter numbers separated by commas)
+   - Specify the desired capacity for the selected groups
+   - Confirms the scaling operation with a success message
 
-5. The script will print the new access key information, including the Access Key ID and Secret Access Key. Make sure to save this information securely as it will not be accessible again.
+#### Example Usage
 
-**Note:**
+```bash
+$ cli_scale_ec2_asg
+Select an action:
+1. Show instance uptimes
+2. Scale autoscaling group
+Enter your choice (1 or 2): 1
 
-- Ensure that the AWS credentials used by the script have appropriate permissions to manage IAM users, change passwords, and create/delete access keys.
-- The IAM user specified in the script must have sufficient permissions to change their own password and access key.
-- Review and modify the script as necessary to meet your specific requirements and security practices.
+Auto Scaling Group: my-web-servers
+  Instance i-1234567890abcdef0: Running for 2 days, 3 hours, 45 minutes
+  Instance i-0987654321fedcba0: Running for 1 day, 12 hours, 30 minutes
+```
+
+#### Important Notes
+
+- Ensure your AWS credentials have the following permissions:
+  - `autoscaling:DescribeAutoScalingGroups`
+  - `autoscaling:UpdateAutoScalingGroup`
+  - `ec2:DescribeInstances`
+- The tool currently supports up to 100 Auto Scaling Groups. If you have more, modify the `MaxRecords` parameter in the [`get_autoscaling_groups`](P67_awstools/cli_scale_ec2_asg.py) function.
+
+### 2. IAM User Password and Access Key Management (`aws_passwd_rotate`)
+
+The [`aws_passwd_rotate`](P67_awstools/password_rotate.py) tool provides a secure way to rotate IAM user passwords and access keys. This is essential for maintaining good security hygiene in your AWS environment.
+
+#### Usage
+
+Run the tool from the command line:
+
+```bash
+aws_passwd_rotate
+```
+
+#### What it does
+
+1. **Password Rotation**: Changes your IAM user password
+2. **Access Key Management**: Disables all existing access keys and creates a new one
+3. **Secure Output**: Displays the new access key credentials (save them immediately!)
+
+#### Example Usage
+
+```bash
+$ aws_passwd_rotate
+Enter your current password: ********
+Enter your new password: ********
+
+Password changed successfully!
+All existing access keys have been disabled.
+New access key created:
+
+Access Key ID: AKIAIOSFODNN7EXAMPLE
+Secret Access Key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+
+⚠️  IMPORTANT: Save these credentials securely! They will not be shown again.
+```
+
+#### Required Permissions
+
+Your AWS credentials must have the following IAM permissions:
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "iam:ChangePassword",
+                "iam:ListAccessKeys",
+                "iam:CreateAccessKey",
+                "iam:UpdateAccessKey"
+            ],
+            "Resource": "arn:aws:iam::*:user/${aws:username}"
+        }
+    ]
+}
+```
+
+#### Security Considerations
+
+- **Save credentials immediately**: The new access key will only be displayed once
+- **Update applications**: Remember to update any applications using the old access keys
+- **Test thoroughly**: Verify that the new credentials work before discarding the old ones
+- **Regular rotation**: Consider automating this process for enhanced security
 
 ## License
 
