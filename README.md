@@ -1,6 +1,6 @@
 # P67-awstools
 
-A comprehensive collection of Python tools for AWS management, security auditing, and operational tasks. This toolkit provides six powerful utilities to simplify common AWS activities and improve your cloud security posture.
+A comprehensive collection of Python tools for AWS management, security auditing, and operational tasks. This toolkit provides six powerful utilities designed to simplify common AWS activities and strengthen your cloud security posture.
 
 ## Table of Contents
 
@@ -82,7 +82,7 @@ Auto Scaling Group: my-web-servers
   - `autoscaling:DescribeAutoScalingGroups`
   - `autoscaling:UpdateAutoScalingGroup`
   - `ec2:DescribeInstances`
-- The tool currently supports up to 100 Auto Scaling Groups. If you have more, modify the `MaxRecords` parameter in the [`get_autoscaling_groups`](P67_awstools/cli_scale_ec2_asg.py) function.
+- The tool currently supports up to 100 Auto Scaling Groups. If you have more, modify the `MaxRecords` parameter in the [`get_autoscaling_groups`](P67_awstools/cli_scale_ec2_asg.py#L8) function.
 
 ### 2. IAM User Password and Access Key Management (`aws_passwd_rotate`)
 
@@ -98,7 +98,7 @@ aws_passwd_rotate
 
 #### What it does
 
-1. **Password Rotation**: Changes your IAM user password
+1. **Password Rotation**: Securely changes your IAM user password
 2. **Access Key Management**: Disables all existing access keys and creates a new one
 3. **Secure Output**: Displays the new access key credentials (save them immediately!)
 
@@ -146,11 +146,11 @@ Your AWS credentials must have the following IAM permissions:
 - **Save credentials immediately**: The new access key will only be displayed once
 - **Update applications**: Remember to update any applications using the old access keys
 - **Test thoroughly**: Verify that the new credentials work before discarding the old ones
-- **Regular rotation**: Consider automating this process for enhanced security
+- **Regular rotation**: Consider automating this process for enhanced security compliance
 
 ### 3. Security Group Auditor (`sg_auditor`)
 
-The [`sg_auditor`](P67_awstools/sg_auditor.py) tool performs comprehensive security analysis of your AWS Security Groups across all regions, identifying potential security risks and compliance issues.
+The [`sg_auditor`](P67_awstools/sg_auditor.py) tool performs comprehensive security analysis of your AWS Security Groups across all regions, identifying potential security risks and helping ensure compliance with security best practices.
 
 #### Usage
 
@@ -325,7 +325,7 @@ Analyzing IAM configuration...
 
 ### 5. Backup Manager (`backup_manager`)
 
-The [`backup_manager`](P67_awstools/backup_manager.py) tool provides comprehensive backup management for EBS volumes and RDS instances, helping ensure your data protection strategy is robust and cost-effective.
+The [`backup_manager`](P67_awstools/backup_manager.py) tool provides comprehensive backup management for EBS volumes and RDS instances, helping ensure your data protection strategy is both robust and cost-effective.
 
 #### Usage
 
@@ -417,7 +417,7 @@ Select an option (1-4):
 
 ### 6. Cross-Account Resource Finder (`cross_account_finder`)
 
-The [`cross_account_finder`](P67_awstools/cross_account_finder.py) tool provides powerful multi-account resource discovery and inventory management across your AWS organization.
+The [`cross_account_finder`](P67_awstools/cross_account_finder.py) tool provides powerful multi-account resource discovery and comprehensive inventory management across your AWS organization.
 
 #### Usage
 
